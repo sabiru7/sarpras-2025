@@ -12,3 +12,10 @@ Route::get('/home', function () {
 Route::get('/welcome', function () {
     return view('welcome'); // This should point to your next page, e.g., resources/views/next-page.blade.php
 });
+Route::get('/peminjaman', function () {
+    return view('peminjaman'); // This should point to your next page, e.g., resources/views/next-page.blade.php
+});
+Route::get('/users', function () {
+    return view('user'); // This should point to your next page, e.g., resources/views/next-page.blade.php
+});
+Route::resource('barangs', BarangController::class);

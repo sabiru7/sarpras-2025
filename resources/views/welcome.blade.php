@@ -63,7 +63,6 @@
         <select class="form-select" id="register-role" required>
           <option value="" disabled selected>Select role</option>
           <option value="user">User</option>
-          <option value="moderator">Moderator</option>
           <option value="admin">Admin</option>
         </select>
       </div>
