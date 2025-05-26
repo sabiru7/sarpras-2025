@@ -23,7 +23,7 @@
                     <a href="peminjaman" class="btn btn-primary w-full mb-2">Kelola Peminjaman</a>
                     <a href="check-status" class="btn btn-secondary w-full mb-2">Cek Status Peminjaman</a>
                     <a href="approve-loans" class="btn btn-success w-full mb-2">Approval Peminjaman</a>
-                    <a href="loan-reports" class="btn btn-info w-full mb-2">Laporan Peminjaman</a>
+                    <a href="" class="btn btn-info w-full mb-2">Laporan Peminjaman</a>
                     <a href="users" class="btn btn-warning w-full">Kelola Akun Pengguna</a> 
                 </div>
             </div>

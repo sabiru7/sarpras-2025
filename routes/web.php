@@ -18,4 +18,6 @@ Route::get('/peminjaman', function () {
 Route::get('/users', function () {
     return view('user'); // This should point to your next page, e.g., resources/views/next-page.blade.php
 });
-Route::resource('barangs', BarangController::class);
+Route::get('/peminjaman', function () {
+    return view('barangs.index'); // This should point to your next page, e.g., resources/views/next-page.blade.php
+});
