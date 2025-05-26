@@ -24,5 +24,6 @@ Route::post('/login', [AuthController::class, 'login']);
 use App\Http\Controllers\BarangController;
 
 // Define API routes
-Route::get('/barang', [BarangController::class, 'index']);
-Route::post('/barang/pinjam', [BarangController::class, 'pinjam']);
+
+Route::get('/barangs', [BarangController::class, 'index']);
+Route::post('/barangs', [BarangController::class, 'store']);

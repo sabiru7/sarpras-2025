@@ -21,3 +21,6 @@ Route::get('/users', function () {
 Route::get('/peminjaman', function () {
     return view('barangs.index'); // This should point to your next page, e.g., resources/views/next-page.blade.php
 });
+Route::get('/home', function () {
+    return view('home'); // This should point to your next page, e.g., resources/views/next-page.blade.php
+});

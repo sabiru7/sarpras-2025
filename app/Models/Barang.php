@@ -11,12 +11,9 @@ class Barang extends Model
 
     protected $table = 'barang';
 
-    protected $fillable = [
-        'nama',
-        'stok',
-        'gambar', // Include gambar in fillable attributes
-    ];
+   use HasFactory;
 
+    protected $fillable = ['nama', 'jumlah', 'foto'];
     public function isAvailable()
     {
         return $this->stok > 0;

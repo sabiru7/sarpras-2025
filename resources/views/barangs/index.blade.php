@@ -3,153 +3,213 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard Peminjaman Barang</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Include jQuery -->
-</head>
-<body class="bg-gray-100 min-h-screen font-sans">
-
-  <header class="bg-indigo-700 text-white shadow-md">
-    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-      <h1 class="text-3xl font-bold">Dashboard Peminjaman Barang</h1>
-      <nav>
-        <ul class="flex space-x-6 text-lg">
-          <li><a href="#" class="hover:underline">Beranda</a></li>
-          <li><a href="#" class="hover:underline">Daftar Barang</a></li>
-          <li><a href="#" class="hover:underline">Pengaturan</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
-
-  <main class="max-w-7xl mx-auto px-6 py-10">
-    <section>
-      <h2 class="text-2xl font-semibold text-gray-800 mb-6">Barang yang Tersedia untuk Dipinjam</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        <!-- Item 1: Proyektor -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-          <img 
-            src="https://images.unsplash.com/photo-1603791440384-56cd371ee9a7?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=600&amp;q=80" 
-            alt="Proyektor" 
-            class="w-full h-48 object-cover"
-          />
-          <div class="p-4">
-            <h3 class="text-xl font-semibold mb-2 text-indigo-700">Proyektor</h3>
-            <p class="text-gray-600 mb-1">Stok: <span class="font-semibold">2</span></p>
-            <p class="text-green-600 font-semibold mb-3">Tersedia</p>
-            <button class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition" onclick="pinjamBarang('Proyektor')">Pinjam</button>
-          </div>
-        </div>
-
-        <!-- Item 2: Spidol -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-          <img 
-            src="https://images.unsplash.com/photo-1589927986089-358c8c8c8c8c?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=600&amp;q=80"
-            alt="Spidol" 
-            class="w-full h-48 object-cover"
-          />
-          <div class="p-4">
-            <h3 class="text-xl font-semibold mb-2 text-indigo-700">Spidol</h3>
-            <p class="text-gray-600 mb-1">Stok: <span class="font-semibold">5</span></p>
-            <p class="text-green-600 font-semibold mb-3">Tersedia</p>
-            <button class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition" onclick="pinjamBarang('Spidol')">Pinjam</button>
-          </div>
-        </div>
-
-        <!-- Item 3: Kabel HDMI -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-          <img 
-            src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=600&amp;q=80"
-            alt="Kabel HDMI" 
-            class="w-full h-48 object-cover"
-          />
-          <div class="p-4">
-            <h3 class="text-xl font-semibold mb-2 text-indigo-700">Kabel HDMI</h3>
-            <p class="text-gray-600 mb-1">Stok: <span class="font-semibold">4</span></p>
-            <p class="text-green-600 font-semibold mb-3">Tersedia</p>
-            <button class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition" onclick="pinjamBarang('Kabel HDMI')">Pinjam</button>
-          </div>
-        </div>
-
-        <!-- Item 4: Laptop -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-          <img 
-            src="https://images.unsplash.com/photo-1511988617509-a57c8a288659?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=600&amp;q=80" 
-            alt="Laptop" 
-            class="w-full h-48 object-cover"
-          />
-          <div class="p-4">
-            <h3 class="text-xl font-semibold mb-2 text-indigo-700">Laptop</h3>
-            <p class="text-gray-600 mb-1">Stok: <span class="font-semibold">3</span></p>
-            <p class="text-green-600 font-semibold mb-3">Tersedia</p>
-            <button class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition" onclick="pinjamBarang('Laptop')">Pinjam</button>
-          </div>
-        </div>
-
-        <!-- Item 5: Penghapus -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-          <img 
-            src="https://images.unsplash.com/photo-1529472119199-5a99a4c1d11f?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=600&amp;q=80" 
-            alt="Penghapus" 
-            class="w-full h-48 object-cover"
-          />
-          <div class="p-4">
-            <h3 class="text-xl font-semibold mb-2 text-indigo-700">Penghapus</h3>
-            <p class="text-gray-600 mb-1">Stok: <span class="font-semibold">10</span></p>
-            <p class="text-green-600 font-semibold mb-3">Tersedia</p>
-            <button class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition" onclick="pinjamBarang('Penghapus')">Pinjam</button>
-          </div>
-        </div>
-
-        <!-- Item 6: Isi Ulang Spidol -->
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
-          <img 
-            src="https://images.unsplash.com/photo-1602773862742-3f3e1f1f86da?ixlib=rb-4.0.3&amp;auto=format&amp;fit=crop&amp;w=600&amp;q=80" 
-            alt="Isi Ulang Spidol" 
-            class="w-full h-48 object-cover"
-          />
-          <div class="p-4">
-            <h3 class="text-xl font-semibold mb-2 text-indigo-700">Isi Ulang Spidol</h3>
-            <p class="text-gray-600 mb-1">Stok: <span class="font-semibold">6</span></p>
-            <p class="text-green-600 font-semibold mb-3">Tersedia</p>
-            <button class="w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition" onclick="pinjamBarang('Isi Ulang Spidol')">Pinjam</button>
-          </div>
-        </div>
-
-      </div>
-    </section>
-  </main>
-
-  <footer class="bg-indigo-700 text-white text-center py-6 mt-12">
-    &copy; 2024 Sistem Peminjaman Barang. All rights reserved.
-  </footer>
-
-
-  <script>
-    function pinjamBarang(namaBarang) {
-        $.ajax({
-            url: '/api/barang/pinjam', // Update to your API endpoint
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                nama: namaBarang,
-                // Include CSRF token if necessary
-                // 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }),
-            success: function(response) {
-                alert(response.message);
-                // Optionally, refresh the page or update UI to reflect the new stock
-                location.reload(); // Reloads the page to show updated stock
-            },
-            error: function(xhr) {
-                const errorMessage = xhr.responseJSON?.message || 'Terjadi kesalahan saat meminjam barang. Silakan coba lagi.';
-                alert(errorMessage);
-            }
-
-        });
+  <title>Manajemen Barang dengan Foto</title>
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background: #eef2f7;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
-  </script>
+    .floating-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      width: 460px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    .table-container {
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    table img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .img-placeholder {
+      width: 50px;
+      height: 50px;
+      background: #ced4da;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6c757d;
+      font-size: 1.3rem;
+      user-select: none;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 5px; /* Menambahkan jarak antara tombol */
+    }
+  </style>
+</head>
+<body>
+  <div class="floating-card">
+    <h3 class="mb-4 text-center text-primary">Manajemen Stok Barang dengan Foto</h3>
+    <form id="barang-form" class="mb-4">
+      <div class="mb-3">
+        <label for="nama" class="form-label">Nama Barang</label>
+        <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama barang" required />
+      </div>
+      <div class="mb-3">
+        <label for="jumlah" class="form-label">Stok (Jumlah)</label>
+        <input type="number" class="form-control" id="jumlah" name="jumlah" min="1" placeholder="Jumlah stok" required />
+      </div>
+      <div class="mb-3">
+        <label for="foto" class="form-label">Foto Barang (opsional)</label>
+        <input class="form-control" type="file" id="foto" name="foto" accept="image/*" />
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Tambah Barang</button>
+    </form>
+    <div class="table-container">
+      <table class="table table-striped table-hover mb-0" aria-label="Tabel daftar stok barang" role="grid">
+        <thead class="table-primary">
+          <tr>
+            <th scope="col" style="width: 10%;">No.</th>
+            <th scope="col" style="width: 60px;">Foto</th>
+            <th scope="col">Nama Barang</th>
+            <th scope="col" style="width: 25%;">Stok</th>
+            <th scope="col" style="width: 15%;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="table-barang-body">
+          <tr><td colspan="5" class="text-center text-muted fst-italic py-3">Belum ada data barang</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
+  <!-- Bootstrap 5 JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    (() => {
+      const form = document.getElementById('barang-form');
+      const tbody = document.getElementById('table-barang-body');
+      const STORAGE_KEY = 'barang-stok-list';
+      let editIndex = -1; // Index untuk mengedit barang
+
+      function loadBarang() {
+        const data = localStorage.getItem(STORAGE_KEY);
+        if (!data) return [];
+        try {
+          return JSON.parse(data);
+        } catch {
+          return [];
+        }
+      }
+
+      function saveBarang(barangList) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(barangList));
+      }
+
+      function renderTable() {
+        const barangList = loadBarang();
+        tbody.innerHTML = '';
+
+        if (barangList.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted fst-italic py-3">Belum ada data barang</td></tr>';
+          return;
+        }
+
+        barangList.forEach((barang, idx) => {
+          const tr = document.createElement('tr');
+          const imgHTML = barang.foto
+            ? `<img src="${barang.foto}" alt="Foto ${barang.nama}" loading="lazy" />`
+            : `<div class="img-placeholder" title="Tidak ada foto">&#128247;</div>`;
+          tr.innerHTML = `
+            <th scope="row">${idx + 1}</th>
+            <td>${imgHTML}</td>
+            <td>${barang.nama}</td>
+            <td>${barang.jumlah}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-warning btn-sm" onclick="editBarang(${idx})">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteBarang(${idx})">Hapus</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function readFileAsDataURL(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onerror = () => {
+            reader.abort();
+            reject(new DOMException("Problem reading input file."));
+          };
+          reader.onload = () => {
+            resolve(reader.result);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const nama = form.nama.value.trim();
+        const jumlah = parseInt(form.jumlah.value);
+        const fotoFile = form.foto.files[0];
+
+        if (!nama || jumlah < 1) {
+          alert('Mohon isi nama barang dan jumlah yang valid.');
+          return;
+        }
+
+        let fotoDataURL = null;
+        if (fotoFile) {
+          try {
+            fotoDataURL = await readFileAsDataURL(fotoFile);
+          } catch {
+            alert('Gagal memuat foto. Silakan coba lagi.');
+            return;
+          }
+        }
+
+        let barangList = loadBarang();
+
+        if (editIndex > -1) {
+          // Jika sedang dalam mode edit
+          barangList[editIndex] = { nama, jumlah, foto: fotoDataURL };
+          editIndex = -1; // Reset editIndex
+        } else {
+          // Tambah barang baru
+          barangList.push({ nama, jumlah, foto: fotoDataURL });
+        }
+
+        saveBarang(barangList);
+        renderTable();
+        form.reset();
+        form.nama.focus();
+      });
+
+      window.editBarang = (index) => {
+        const barangList = loadBarang();
+        const barang = barangList[index];
+
+        form.nama.value = barang.nama;
+        form.jumlah.value = barang.jumlah;
+        form.foto.value = ''; // Reset file input
+        editIndex = index; // Set index untuk edit
+      };
+
+      window.deleteBarang = (index) => {
+        let barangList = loadBarang();
+        barangList.splice(index, 1); // Hapus barang dari list
+        saveBarang(barangList);
+        renderTable();
+      };
+
+      // Initial rendering
+      renderTable();
+    })();
+  </script>
 </body>
 </html>
-
