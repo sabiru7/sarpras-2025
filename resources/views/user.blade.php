@@ -1,241 +1,196 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Manajemen Akun User</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>User Table</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
   <style>
-    /* Custom scrollbar for table */
-    .scrollbar-thin::-webkit-scrollbar {
-      height: 8px;
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
     }
-    .scrollbar-thin::-webkit-scrollbar-thumb {
-      background-color: #94a3b8;
-      border-radius: 4px;
+    .table-container, .form-container {
+      margin: 20px;
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(118, 75, 162, 0.3);
+      padding: 20px;
     }
   </style>
 </head>
-<body class="bg-gradient-to-r from-blue-100 via-blue-50 to-white min-h-screen font-sans text-gray-800">
-  <header class="bg-blue-600 shadow-lg">
-    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-      <h1 class="text-white font-bold text-2xl select-none">Manajemen Akun User</h1>
-      <button id="btnAddUser" class="px-4 py-2 bg-white text-blue-600 font-semibold rounded shadow hover:bg-blue-50 transition">
-        + Tambah User
-      </button>
-    </div>
-  </header>
-  <main class="max-w-7xl mx-auto mt-8 px-6">
-    <div class="overflow-x-auto scrollbar-thin rounded-lg shadow-md bg-white">
-      <table class="min-w-full border-collapse border border-gray-200">
-        <thead class="bg-blue-50 text-blue-800 font-semibold uppercase text-sm">
-          <tr>
-            <th class="border border-blue-100 p-3 text-left">#</th>
-            <th class="border border-blue-100 p-3 text-left">Nama</th>
-            <th class="border border-blue-100 p-3 text-left">Email</th>
-            <th class="border border-blue-100 p-3 text-left">Role</th>
-            <th class="border border-blue-100 p-3 text-center">Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="userTableBody" class="divide-y divide-gray-100 text-gray-700"></tbody>
-      </table>
-    </div>
-  </main>
-
-  <!-- Modal Background -->
-  <div id="modalBg" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center hidden z-50">
-    <div class="bg-white rounded-lg w-96 max-w-full p-6 shadow-lg relative">
-      <h2 id="modalTitle" class="text-xl font-semibold mb-4">Tambah User</h2>
-      <form id="userForm" class="space-y-4">
-        <input type="hidden" id="userId" />
-        <div>
-          <label for="name" class="block text-gray-700 font-medium mb-1">Nama</label>
-          <input type="text" id="name" class="w-full border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400" placeholder="Masukkan nama" required />
-        </div>
-        <div>
-          <label for="email" class="block text-gray-700 font-medium mb-1">Email</label>
-          <input type="email" id="email" class="w-full border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400" placeholder="Masukkan email" required />
-        </div>
-        <div>
-          <label for="password" class="block text-gray-700 font-medium mb-1">Password</label>
-          <input type="password" id="password" class="w-full border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400" placeholder="Masukkan password" required />
-        </div>
-        <div>
-          <label for="role" class="block text-gray-700 font-medium mb-1">Role</label>
-          <select id="role" class="w-full border rounded px-3 py-2 outline-none focus:ring-2 focus:ring-blue-400" required>
-            <option value="">Pilih role</option>    
-            <option value="User">User</option>
-            <option value="Admin">Admin</option>
-          </select>
-        </div>
-        <div class="flex justify-end space-x-3">
-          <button type="button" id="btnCancel" class="px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 transition">Batal</button>
-          <button type="submit" id="btnSave" class="px-4 py-2 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700 transition">Simpan</button>
-        </div>
-      </form>
-      <button id="modalClose" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-xl font-bold">&times;</button>
-    </div>
+<body>
+  <div class="form-container">
+    <h2 class="text-center text-purple-700">Add New User</h2>
+    <form id="user-form" class="space-y-3">
+      <div>
+        <label for="user-name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="user-name" placeholder="Enter name" required />
+      </div>
+      <div>
+        <label for="user-email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="user-email" placeholder="name@example.com" required />
+      </div>
+      <div>
+        <label for="user-password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="user-password" placeholder="Enter password" required />
+      </div>
+      <div>
+        <label for="user-role" class="form-label">Role</label>
+        <select class="form-select" id="user-role" required>
+          <option value="" disabled selected>Select role</option>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary w-full mt-2">Add User</button>
+    </form>
   </div>
 
-  <div id="notification" class="fixed top-4 right-4 bg-green-500 text-white p-4 rounded shadow-lg hidden"></div>
+  <div class="table-container">
+    <h2 class="text-center text-purple-700">User Table</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="user-table-body">
+        <!-- User data will be populated here -->
+      </tbody>
+    </table>
+  </div>
 
   <script>
-    const modalBg = document.getElementById('modalBg');
-    const modalTitle = document.getElementById('modalTitle');
-    const btnAddUser = document.getElementById('btnAddUser');
-    const btnCancel = document.getElementById('btnCancel');
-    const modalClose = document.getElementById('modalClose');
-    const userForm = document.getElementById('userForm');
-    const userIdInput = document.getElementById('userId');
-    const nameInput = document.getElementById('name');
-    const emailInput = document.getElementById('email');
-    const passwordInput = document.getElementById('password');
-    const roleInput = document.getElementById('role');
-    const userTableBody = document.getElementById('userTableBody');
-    const notification = document.getElementById('notification');
+    const userForm = document.getElementById('user-form');
+    const userTableBody = document.getElementById('user-table-body');
 
-    let editIndex = null;
-
-    function resetForm() {
-      userIdInput.value = '';
-      nameInput.value = '';
-      emailInput.value = '';
-      passwordInput.value = '';
-      roleInput.value = '';
-      editIndex = null;
+    // Fetch user data from the API
+    function fetchUsers() {
+      fetch('/api/users')
+        .then(response => response.json())
+        .then(data => {
+          userTableBody.innerHTML = ''; // Clear existing rows
+          data.forEach(user => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${user.id}</td>
+              <td>${user.name}</td>
+              <td>${user.email}</td>
+              <td>${user.role}</td>
+              <td>
+                <button class="btn btn-warning btn-sm" onclick="editUser(${user.id})">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteUser(${user.id})">Delete</button>
+              </td>
+            `;
+            userTableBody.appendChild(row);
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+        });
     }
 
-    function showModal(edit = false, userData = null) {
-      modalBg.classList.remove('hidden');
-      if (edit) {
-        modalTitle.textContent = 'Edit User';
-        userIdInput.value = userData.id;
-        nameInput.value = userData.name;
-        emailInput.value = userData.email;
-        roleInput.value = userData.role;
-        passwordInput.value = ''; // Don't pre-fill password for security
-      } else {
-        modalTitle.textContent = 'Tambah User';
-        resetForm();
-      }
-    }
-
-    function closeModal() {
-      modalBg.classList.add('hidden');
-      resetForm();
-    }
-
-    async function fetchUsers() {
-      const response = await fetch('/api/users');
-      const users = await response.json();
-      userTableBody.innerHTML = '';
-
-      users.forEach((user, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="border border-gray-100 p-3">${index + 1}</td>
-          <td class="border border-gray-100 p-3">${user.name}</td>
-          <td class="border border-gray-100 p-3">${user.email}</td>
-          <td class="border border-gray-100 p-3">${user.role}</td>
-          <td class="border border-gray-100 p-3 text-center space-x-2">
-            <button class="btnEditUser px-3 py-1 bg-yellow-300 text-yellow-900 rounded hover:bg-yellow-400 transition">Edit</button>
-            <button class="btnDeleteUser px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">Hapus</button>
-          </td>
-        `;
-        userTableBody.appendChild(tr);
-      });
-
-      bindActionButtons();
-    }
-
-    function showNotification(message) {
-      notification.textContent = message;
-      notification.classList.remove('hidden');
-      setTimeout(() => {
-        notification.classList.add('hidden');
-      }, 3000);
-    }
-
-    btnAddUser.addEventListener('click', () => showModal());
-    btnCancel.addEventListener('click', closeModal);
-    modalClose.addEventListener('click', closeModal);
-
-    userForm.addEventListener('submit', async e => {
+    // Add new user
+    userForm.addEventListener('submit', e => {
       e.preventDefault();
+      const name = document.getElementById('user-name').value;
+      const email = document.getElementById('user-email').value;
+      const password = document.getElementById('user-password').value;
+      const role = document.getElementById('user-role').value;
 
-      const name = nameInput.value.trim();
-      const email = emailInput.value.trim();
-      const password = passwordInput.value.trim();
-      const role = roleInput.value;
-
-      if (!name || !email || !password || !role) {
-        alert("Semua field harus diisi!");
-        return;
-      }
-
-      const method = userIdInput.value ? 'PUT' : 'POST';
-      const url = userIdInput.value ? `/api/users/${userIdInput.value}` : '/api/users';
-
-      const data = { name, email, role };
-      if (!userIdInput.value) {
-        data.password = password; // Include password only for new users
-      }
-
-      const response = await fetch(url, {
-        method: method,
+      fetch('/api/users', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ name, email, password, role }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        fetchUsers(); // Refresh the user table
+        userForm.reset(); // Reset the form
+      })
+      .catch(error => {
+        console.error('Error adding user:', error);
       });
-
-      if (response.ok) {
-        closeModal();
-        fetchUsers();
-        showNotification(userIdInput.value ? "User berhasil diperbarui!" : "User berhasil ditambahkan!");
-      } else {
-        alert("Terjadi kesalahan saat menyimpan data.");
-      }
     });
 
-    function bindActionButtons() {
-      const editButtons = document.querySelectorAll('.btnEditUser');
-      const deleteButtons = document.querySelectorAll('.btnDeleteUser');
+    // Edit user
+    function editUser(userId) {
+      fetch(`/api/users/${userId}`)
+        .then(response => response.json())
+        .then(user => {
+          document.getElementById('user-name').value = user.name;
+          document.getElementById('user-email').value = user.email;
+          document.getElementById('user-password').value = ''; // Clear password field
+          document.getElementById('user-role').value = user.role;
 
-      editButtons.forEach((btn, i) => {
-        btn.onclick = async () => {
-          const row = btn.closest('tr');
-          const userData = {
-            id: row.cells[0].textContent, // Assuming the first cell contains the user ID
-            name: row.cells[1].textContent,
-            email: row.cells[2].textContent,
-            role: row.cells[3].textContent,
+          // Change the form submission to update the user
+          userForm.onsubmit = function(e) {
+            e.preventDefault();
+            updateUser(userId);
           };
-          showModal(true, userData);
-        };
-      });
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+        });
+    }
 
-      deleteButtons.forEach((btn, i) => {
-        btn.onclick = async () => {
-          const row = btn.closest('tr');
-          const userId = row.cells[0].textContent;
-          if (confirm(`Hapus user "${row.cells[1].textContent}"?`)) {
-            const response = await fetch(`/api/users/${userId}`, {
-              method: 'DELETE',
-            });
+    // Update user
+    function updateUser(userId) {
+      const name = document.getElementById('user-name').value;
+      const email = document.getElementById('user-email').value;
+      const password = document.getElementById('user-password').value; // Password can be updated
+      const role = document.getElementById('user-role').value;
 
-            if (response.ok) {
-              fetchUsers();
-              showNotification("User berhasil dihapus!");
-            } else {
-              alert("Terjadi kesalahan saat menghapus user.");
-            }
-          }
+      fetch(`/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email, password, role }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert(data.message);
+        fetchUsers(); // Refresh the user table
+        userForm.reset(); // Reset the form
+        userForm.onsubmit = function(e) {
+          e.preventDefault();
+          addUser();
         };
+      })
+      .catch(error => {
+        console.error('Error updating user:', error);
       });
     }
 
-    document.addEventListener('DOMContentLoaded', fetchUsers);
+    // Delete user
+    function deleteUser(userId) {
+      if (confirm('Are you sure you want to delete this user?')) {
+        fetch(`/api/users/${userId}`, {
+          method: 'DELETE',
+        })
+        .then(response => response.json())
+        .then(data => {
+          alert(data.message);
+          fetchUsers(); // Refresh the user table
+        })
+        .catch(error => {
+          console.error('Error deleting user:', error);
+        });
+      }
+    }
+
+    // Initial fetch of users
+    fetchUsers();
   </script>
 </body>
 </html>
