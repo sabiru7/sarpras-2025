@@ -20,32 +20,6 @@
       width: 460px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     }
-    .table-container {
-      max-height: 280px;
-      overflow-y: auto;
-    }
-    table img {
-      width: 50px;
-      height: 50px;
-      object-fit: cover;
-      border-radius: 6px;
-    }
-    .img-placeholder {
-      width: 50px;
-      height: 50px;
-      background: #ced4da;
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #6c757d;
-      font-size: 1.3rem;
-      user-select: none;
-    }
-    .action-buttons {
-      display: flex;
-      gap: 5px;
-    }
   </style>
 </head>
 <body>
@@ -66,24 +40,91 @@
       </div>
       <button type="submit" class="btn btn-primary w-100">Tambah Barang</button>
     </form>
-    <div class="table-container">
-      <table class="table table-striped table-hover mb-0">
-        <thead class="table-primary">
-          <tr>
-            <th scope="col">No.</th>
-            <th scope="col">Foto</th>
-            <th scope="col">Nama Barang</th>
-            <th scope="col">Stok</th>
-            <th scope="col">Aksi</th>
-          </tr>
-        </thead>
-        <tbody id="table-barang-body">
-          <tr><td colspan="5" class="text-center text-muted fst-italic py-3">Belum ada data barang</td></tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <?php
+header('Content-Type: application/json');
+
+$host = 'localhost'; // Your database host
+$db = 'sarpras'; // Your database name
+$user = 'root'; // Your database username
+$pass = ''; // Your database password
+
+$conn = new mysqli($host, $user, $pass, $db);
+
+if ($conn->connect_error) {
+    die(json_encode(['error' => 'Database connection failed: ' . $conn->connect_error]));
+}
+
+$method = $_SERVER['REQUEST_METHOD'];
+
+switch ($method) {
+    case 'GET':
+        $result = $conn->query("SELECT * FROM items");
+        if (!$result) {
+            die(json_encode(['error' => 'Query error: ' . $conn->error]));
+        }
+        $items = $result->fetch_all(MYSQLI_ASSOC);
+        echo json_encode($items);
+        break;
+
+    case 'POST':
+        $data = json_decode(file_get_contents('php://input'), true);
+        $nama = $conn->real_escape_string($data['nama']);
+        $jumlah = (int)$data['jumlah'];
+        $foto = $conn->real_escape_string($data['foto'] ?? '');
+
+        $stmt = $conn->prepare("INSERT INTO items (nama, jumlah, foto) VALUES (?, ?, ?)");
+        $stmt->bind_param("sis", $nama, $jumlah, $foto);
+        
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['error' => 'Insert error: ' . $stmt->error]);
+        }
+        $stmt->close();
+        break;
+
+    case 'PUT':
+        $data = json_decode(file_get_contents('php://input'), true);
+        $id = (int)$data['id'];
+        $nama = $conn->real_escape_string($data['nama']);
+        $jumlah = (int)$data['jumlah'];
+        $foto = $conn->real_escape_string($data['foto'] ?? '');
+
+        $stmt = $conn->prepare("UPDATE items SET nama=?, jumlah=?, foto=? WHERE id=?");
+        $stmt->bind_param("sisi", $nama, $jumlah, $foto, $id);
+        
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['error' => 'Update error: ' . $stmt->error]);
+        }
+        $stmt->close();
+        break;
+
+    case 'DELETE':
+        $data = json_decode(file_get_contents('php://input'), true);
+        $id = (int)$data['id'];
+
+        $stmt = $conn->prepare("DELETE FROM items WHERE id=?");
+        $stmt->bind_param("i", $id);
+        
+        if ($stmt->execute()) {
+            echo json_encode(['success' => true]);
+        } else {
+            echo json_encode(['error' => 'Delete error: ' . $stmt->error]);
+        }
+        $stmt->close();
+        break;
+
+    default:
+        echo json_encode(['error' => 'Invalid request method']);
+        break;
+}
+
+$conn->close();
+?>
 </body>
 </html>

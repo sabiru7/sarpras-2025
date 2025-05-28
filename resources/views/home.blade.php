@@ -16,14 +16,14 @@
 
         <div class="flex flex-col items-center justify-center min-h-screen">
             <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-                <h1 class="text-2xl font-bold text-center text-blue-600">Admin Dashboard</h1>
-                <p class="mt-4 text-center text-gray-700">Kelola Peminjaman dan Laporan di Sini</p>
+                <h1 class="text-2xl font-bold text-center text-blue-600">Admin Sarpas</h1>
+                <p class="mt-4 text-center text-gray-700">kelola data-data sekolah</p>
                 
                 <div class="mt-6">
-                    <a href="peminjaman" class="btn btn-primary w-full mb-2">Kelola Peminjaman</a>
-                    <a href="check-status" class="btn btn-secondary w-full mb-2">Cek Status Peminjaman</a>
+                    <a href="peminjaman" class="btn btn-primary w-full mb-2">Form Peminjaman</a>
+                    <a href="laporan" class="btn btn-secondary w-full mb-2">Cek Status Peminjaman</a>
                     <a href="aproval" class="btn btn-success w-full mb-2">Approval Peminjaman</a>
-                    <a href="" class="btn btn-info w-full mb-2">Laporan Peminjaman</a>
+                    <a href="barang" class="btn btn-info w-full mb-2">Kelola Barang-Barang</a>
                     <a href="users" class="btn btn-warning w-full">Kelola Akun Pengguna</a> 
                 </div>
             </div>
