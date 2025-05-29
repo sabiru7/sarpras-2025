@@ -25,7 +25,7 @@ Route::get('/home', function () {
     return view('home'); // This should point to your next page, e.g., resources/views/next-page.blade.php
 });
 Route::get('/barang', function () {
-    return view('laporan.barang'); // This should point to your next page, e.g., resources/views/next-page.blade.php
+    return view('barangs.barang'); // This should point to your next page, e.g., resources/views/next-page.blade.php
 });
 Route::get('/aproval', function () {
     return view('laporan.aproval'); // This should point to your next page, e.g., resources/views/next-page.blade.php
