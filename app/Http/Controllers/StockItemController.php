@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 
 class StockItemController extends Controller
 {
+    private $imageFolder = 'uploads/stock_items';
+
     public function index()
     {
         return StockItem::all();
@@ -15,20 +17,20 @@ class StockItemController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:1',
             'category' => 'required|string|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $path = $request->file('photo') ? $request->file('photo')->store('photos', 'public') : null;
+        $path = $this->uploadPhoto($request);
 
         $item = StockItem::create([
-            'name' => $request->name,
-            'quantity' => $request->quantity,
-            'category' => $request->category,
-            'photo' => $path ? Storage::url($path) : null, // Menggunakan Storage::url untuk mendapatkan URL yang benar
+            'name' => $validated['name'],
+            'quantity' => $validated['quantity'],
+            'category' => $validated['category'],
+            'photo' => $path,
         ]);
 
         return response()->json($item, 201);
@@ -43,30 +45,44 @@ class StockItemController extends Controller
     {
         $item = StockItem::findOrFail($id);
 
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:1',
             'category' => 'required|string|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        // Jika ada foto baru, simpan dan hapus foto lama jika ada
         if ($request->hasFile('photo')) {
-            // Hapus foto lama jika ada
-            if ($item->photo) {
-                $oldPath = str_replace('/storage/', '', $item->photo); // Menghapus '/storage/' untuk mendapatkan path yang benar
-                Storage::disk('public')->delete($oldPath);
-            }
-            $path = $request->file('photo')->store('photos', 'public');
-            $item->photo = Storage::url($path); // Menggunakan Storage::url untuk mendapatkan URL yang benar
+            $this->deletePhoto($item->photo);
+            $item->photo = $this->uploadPhoto($request);
         }
 
         $item->update([
-            'name' => $request->name,
-            'quantity' => $request->quantity,
-            'category' => $request->category,
-            // Hanya memperbarui foto jika ada foto baru
+            'name' => $validated['name'],
+            'quantity' => $validated['quantity'],
+            'category' => $validated['category'],
         ]);
+
+        $item->save();
+
+        return response()->json($item);
+    }
+
+    // Method khusus update foto saja
+    public function updatePhoto(Request $request, $id)
+    {
+        $item = StockItem::findOrFail($id);
+
+        $validated = $request->validate([
+            'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        // Hapus foto lama
+        $this->deletePhoto($item->photo);
+
+        // Upload foto baru
+        $item->photo = $this->uploadPhoto($request);
+        $item->save();
 
         return response()->json($item);
     }
@@ -74,13 +90,26 @@ class StockItemController extends Controller
     public function destroy($id)
     {
         $item = StockItem::findOrFail($id);
-        // Hapus foto jika ada
-        if ($item->photo) {
-            $oldPath = str_replace('/storage/', '', $item->photo);
-            Storage::disk('public')->delete($oldPath);
-        }
+        $this->deletePhoto($item->photo);
         $item->delete();
 
         return response()->json(null, 204);
+    }
+
+    private function uploadPhoto(Request $request): ?string
+    {
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store($this->imageFolder, 'public');
+            return Storage::url($path);
+        }
+        return null;
+    }
+
+    private function deletePhoto(?string $url): void
+    {
+        if ($url) {
+            $path = str_replace('/storage/', '', $url);
+            Storage::disk('public')->delete($path);
+        }
     }
 }
