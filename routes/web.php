@@ -24,8 +24,8 @@ Route::get('/peminjaman', function () {
 Route::get('/home', function () {
     return view('home'); // This should point to your next page, e.g., resources/views/next-page.blade.php
 });
-Route::get('/laporan', function () {
-    return view('laporan.laporan'); // This should point to your next page, e.g., resources/views/next-page.blade.php
+Route::get('/barang', function () {
+    return view('laporan.barang'); // This should point to your next page, e.g., resources/views/next-page.blade.php
 });
 Route::get('/aproval', function () {
     return view('laporan.aproval'); // This should point to your next page, e.g., resources/views/next-page.blade.php
