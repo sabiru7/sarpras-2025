@@ -23,8 +23,8 @@
 
   <div class="container max-w-7xl mx-auto bg-white rounded-xl shadow p-6">
     <header class="mb-6 text-center">
-      <h1 class="text-4xl font-bold text-indigo-700">Manajemen Stok Barang</h1>
-      <p class="text-gray-600">Tambah, edit, dan kelola stok barang dengan gambar dan kategori</p>
+      <h1 class="text-4xl font-bold text-indigo-700">Manajemen Barang Sarpras</h1>
+      <p class="text-gray-600">Mengontrol Data Didalam Web Managemen Barang Sarpras</p>
     </header>
 
     <!-- Modal -->
@@ -71,8 +71,7 @@
 
     <!-- Kontrol -->
     <div class="mb-4 flex justify-between items-center">
-      <button id="addItemBtn" class="btn btn-primary">+ Tambah Barang</button>
-      <span class="text-sm italic text-gray-500">* Data disimpan ke backend</span>
+      <button id="addItemBtn" class="btn btn-primary">Menambahkan Barang</button>
     </div>
 
     <!-- Tabel -->
