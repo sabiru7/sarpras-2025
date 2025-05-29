@@ -109,7 +109,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     // JavaScript for handling add, edit, delete functionality
-    let items = [];
     let currentItemIndex = -1;
 
     document.getElementById('addItemBtn').addEventListener('click', function() {
@@ -128,67 +127,104 @@
         const itemCategory = document.getElementById('itemCategory').value;
         const itemPhoto = document.getElementById('itemPhoto').files[0];
 
-        if (currentItemIndex === -1) {
-            // Add new item
-            const newItem = {
-                id: Date.now(),
-                name: itemName,
-                quantity: itemQuantity,
-                category: itemCategory,
-                photo: URL.createObjectURL(itemPhoto)
-            };
-            items.push(newItem);
-        } else {
-            // Edit existing item
-            items[currentItemIndex].name = itemName;
-            items[currentItemIndex].quantity = itemQuantity;
-            items[currentItemIndex].category = itemCategory;
-            if (itemPhoto) {
-                items[currentItemIndex].photo = URL.createObjectURL(itemPhoto);
-            }
+        const formData = new FormData();
+        formData.append('name', itemName);
+        formData.append('quantity', itemQuantity);
+        formData.append('category', itemCategory);
+        if (itemPhoto) {
+            formData.append('photo', itemPhoto);
         }
 
-        renderTable();
-        const itemModal = bootstrap.Modal.getInstance(document.getElementById('itemModal'));
-        itemModal.hide();
+        if (currentItemIndex === -1) {
+            // Add new item
+            fetch('/api/stock-items', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                renderTable();
+                const itemModal = bootstrap.Modal.getInstance(document.getElementById('itemModal'));
+                itemModal.hide();
+            })
+            .catch(error => console.error('Error:', error));
+        } else {
+            // Edit existing item
+            const itemId = document.getElementById('itemId').value;
+            fetch(`/api/stock-items/${itemId}`, {
+                method: 'PUT',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                renderTable();
+                const itemModal = bootstrap.Modal.getInstance(document.getElementById('itemModal'));
+                itemModal.hide();
+            })
+            .catch(error => console.error('Error:', error));
+        }
     });
 
     function renderTable() {
         const stockTableBody = document.getElementById('stockTableBody');
         stockTableBody.innerHTML = '';
-        items.forEach((item, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td class="px-4 py-2"><img src="${item.photo}" alt="${item.name}" class="h-16 w-16 object-cover" /></td>
-                <td class="px-4 py-2">${item.name}</td>
-                <td class="px-4 py-2">${item.category}</td>
-                <td class="px-4 py-2">${item.quantity}</td>
-                <td class="px-4 py-2 text-center">
-                    <button class="btn btn-warning" onclick="editItem(${index})">Edit</button>
-                    <button class="btn btn-danger" onclick="deleteItem(${index})">Hapus</button>
-                </td>
-            `;
-            stockTableBody.appendChild(row);
-        });
+
+        fetch('/api/stock-items')
+            .then(response => response.json())
+            .then(items => {
+                items.forEach((item, index) => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="px-4 py-2"><img src="${item.photo}" alt="${item.name}" class="h-16 w-16 object-cover" /></td>
+                        <td class="px-4 py-2">${item.name}</td>
+                        <td class="px-4 py-2">${item.category}</td>
+                        <td class="px-4 py-2">${item.quantity}</td>
+                        <td class="px-4 py-2 text-center">
+                            <button class="btn btn-warning" onclick="editItem(${item.id})">Edit</button>
+                            <button class="btn btn-danger" onclick="deleteItem(${item.id})">Hapus</button>
+                        </td>
+                    `;
+                    stockTableBody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error:', error));
     }
 
-    function editItem(index) {
-        currentItemIndex = index;
-        const item = items[index];
-        document.getElementById('itemName').value = item.name;
-        document.getElementById('itemQuantity').value = item.quantity;
-        document.getElementById('itemCategory').value = item.category;
-        document.getElementById('photoPreview').src = item.photo;
-        document.getElementById('photoPreview').classList.remove('hidden');
-        document.getElementById('itemModalLabel').innerText = 'Edit Barang';
-        const itemModal = new bootstrap.Modal(document.getElementById('itemModal'));
-        itemModal.show();
+    function editItem(id) {
+        fetch(`/api/stock-items/${id}`)
+            .then(response => response.json())
+            .then(item => {
+                currentItemIndex = id;
+                document.getElementById('itemName').value = item.name;
+                document.getElementById('itemQuantity').value = item.quantity;
+                document.getElementById('itemCategory').value = item.category;
+                document.getElementById('photoPreview').src = item.photo;
+                document.getElementById('photoPreview').classList.remove('hidden');
+                document.getElementById('itemModalLabel').innerText = 'Edit Barang';
+                document.getElementById('itemId').value = item.id; // Store the item ID for editing
+                const itemModal = new bootstrap.Modal(document.getElementById('itemModal'));
+                itemModal.show();
+            })
+            .catch(error => console.error('Error:', error));
     }
 
-    function deleteItem(index) {
-        items.splice(index, 1);
-        renderTable();
+    function deleteItem(id) {
+        fetch(`/api/stock-items/${id}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.ok) {
+                renderTable();
+            } else {
+                console.error('Error deleting item');
+            }
+        })
+        .catch(error => console.error('Error:', error));
     }
+
+    // Initial render of the table
+    renderTable();
 </script>
+
 </body>
 </html>

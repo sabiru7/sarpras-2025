@@ -18,23 +18,20 @@ class StockItemController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:1',
-            'category' => 'required|string|max:100',
+            'category' => 'required|string|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $stockItem = new StockItem();
-        $stockItem->name = $request->name;
-        $stockItem->quantity = $request->quantity;
-        $stockItem->category = $request->category;
+        $path = $request->file('photo') ? $request->file('photo')->store('photos', 'public') : null;
 
-        if ($request->hasFile('photo')) {
-            $path = $request->file('photo')->store('photos', 'public');
-            $stockItem->photo = $path;
-        }
+        $item = StockItem::create([
+            'name' => $request->name,
+            'quantity' => $request->quantity,
+            'category' => $request->category,
+            'photo' => $path ? Storage::url($path) : null, // Menggunakan Storage::url untuk mendapatkan URL yang benar
+        ]);
 
-        $stockItem->save();
-
-        return response()->json($stockItem, 201);
+        return response()->json($item, 201);
     }
 
     public function show($id)
@@ -44,40 +41,45 @@ class StockItemController extends Controller
 
     public function update(Request $request, $id)
     {
+        $item = StockItem::findOrFail($id);
+
         $request->validate([
             'name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:1',
-            'category' => 'required|string|max:100',
+            'category' => 'required|string|max:255',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $stockItem = StockItem::findOrFail($id);
-        $stockItem->name = $request->name;
-        $stockItem->quantity = $request->quantity;
-        $stockItem->category = $request->category;
-
+        // Jika ada foto baru, simpan dan hapus foto lama jika ada
         if ($request->hasFile('photo')) {
-            // Delete old photo if exists
-            if ($stockItem->photo) {
-                Storage::disk('public')->delete($stockItem->photo);
+            // Hapus foto lama jika ada
+            if ($item->photo) {
+                $oldPath = str_replace('/storage/', '', $item->photo); // Menghapus '/storage/' untuk mendapatkan path yang benar
+                Storage::disk('public')->delete($oldPath);
             }
             $path = $request->file('photo')->store('photos', 'public');
-            $stockItem->photo = $path;
+            $item->photo = Storage::url($path); // Menggunakan Storage::url untuk mendapatkan URL yang benar
         }
 
-        $stockItem->save();
+        $item->update([
+            'name' => $request->name,
+            'quantity' => $request->quantity,
+            'category' => $request->category,
+            // Hanya memperbarui foto jika ada foto baru
+        ]);
 
-        return response()->json($stockItem);
+        return response()->json($item);
     }
 
     public function destroy($id)
     {
-        $stockItem = StockItem::findOrFail($id);
-        // Delete photo if exists
-        if ($stockItem->photo) {
-            Storage::disk('public')->delete($stockItem->photo);
+        $item = StockItem::findOrFail($id);
+        // Hapus foto jika ada
+        if ($item->photo) {
+            $oldPath = str_replace('/storage/', '', $item->photo);
+            Storage::disk('public')->delete($oldPath);
         }
-        $stockItem->delete();
+        $item->delete();
 
         return response()->json(null, 204);
     }

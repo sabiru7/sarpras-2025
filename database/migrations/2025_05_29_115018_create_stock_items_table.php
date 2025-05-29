@@ -13,7 +13,7 @@ class CreateStockItemsTable extends Migration
             $table->string('name');
             $table->integer('quantity');
             $table->string('category');
-            $table->string('photo')->nullable(); // Store the image path
+            $table->string('photo')->nullable();
             $table->timestamps();
         });
     }
