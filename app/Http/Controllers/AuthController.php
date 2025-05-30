@@ -42,39 +42,38 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Invalid credentials!'], 401);
     }
+
     public function store(Request $request)
-{
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users',
-        'password' => 'required|string|min:8',
-        'role' => 'required|in:user,admin',
-    ]);
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+            'role' => 'required|in:user,admin',
+        ]);
 
-    $user = User::create($validatedData);
-    return response()->json($user, 201);
+        $user = User::create($validatedData);
+        return response()->json($user, 201);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:8',
+            'role' => 'required|in:user,admin',
+        ]);
+
+        $user->update($validatedData);
+        return response()->json($user);
+    }
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+        return response()->json(null, 204);
+    }
 }
-
-public function update(Request $request, $id)
-{
-    $user = User::findOrFail($id);
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-        'password' => 'nullable|string|min:8',
-        'role' => 'required|in:user,admin',
-    ]);
-
-    $user->update($validatedData);
-    return response()->json($user);
-}
-
-public function destroy($id)
-{
-    $user = User::findOrFail($id);
-    $user->delete();
-    return response()->json(null, 204);
-}
-
-}
- 

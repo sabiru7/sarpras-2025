@@ -23,7 +23,10 @@ use App\Http\Controllers\AuthController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-
+Route::get('/users', fn() => \App\Models\User::all());
+Route::post('/users', [AuthController::class, 'store']);
+Route::put('/users/{id}', [AuthController::class, 'update']);
+Route::delete('/users/{id}', [AuthController::class, 'destroy']);
 
 use App\Http\Controllers\BarangController;
 
