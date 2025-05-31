@@ -20,11 +20,12 @@ class BorrowingController extends Controller
     // Simpan data peminjaman baru
     public function store(Request $request)
     {
-        // Validasi input form
+        // Validasi input form, termasuk alasan
         $validated = $request->validate([
             'stock_item_id' => 'required|exists:stock_items,id',
             'jumlah' => 'required|integer|min:1',
             'peminjam' => 'required|string|max:255',
+            'alasan' => 'required|string|max:1000',
         ]);
 
         // Ambil stok barang yang dipilih
@@ -39,11 +40,12 @@ class BorrowingController extends Controller
         $stock->quantity -= $validated['jumlah'];
         $stock->save();
 
-        // Simpan data peminjaman ke database
+        // Simpan data peminjaman ke database dengan alasan
         Borrowing::create([
             'stock_item_id' => $validated['stock_item_id'],
             'jumlah' => $validated['jumlah'],
             'borrower_name' => $validated['peminjam'],
+            'alasan' => $validated['alasan'],
         ]);
 
         // Redirect kembali dengan pesan sukses

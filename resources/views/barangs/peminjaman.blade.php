@@ -44,6 +44,11 @@
         <input type="text" id="peminjam" name="peminjam" class="form-control" required />
       </div>
 
+      <div class="mb-4">
+        <label for="alasan" class="form-label">Deskripsi Alasan</label>
+        <textarea id="alasan" name="alasan" class="form-control" rows="3" required></textarea>
+      </div>
+
       <button type="submit" class="btn btn-primary w-full">Pinjam</button>
     </form>
 
@@ -59,6 +64,7 @@
             <th>Nama Barang</th>
             <th>Jumlah</th>
             <th>Peminjam</th>
+            <th>Alasan</th>
             <th>Tanggal</th>
           </tr>
         </thead>
@@ -75,11 +81,12 @@
               <td>{{ $borrowing->stockItem->name }}</td>
               <td>{{ $borrowing->jumlah }}</td>
               <td>{{ $borrowing->peminjam }}</td>
+              <td>{{ $borrowing->alasan }}</td>
               <td>{{ $borrowing->created_at->format('d M Y H:i') }}</td>
             </tr>
           @empty
             <tr>
-              <td colspan="5" class="text-center">Belum ada peminjaman.</td>
+              <td colspan="6" class="text-center">Belum ada peminjaman.</td>
             </tr>
           @endforelse
         </tbody>

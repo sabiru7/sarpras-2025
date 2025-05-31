@@ -6,17 +6,24 @@ use Illuminate\Support\Facades\Schema;
 
 class CreateBorrowingsTable extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('borrowings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('stock_item_id')->constrained('stock_items')->onDelete('cascade'); // barang yang dipinjam
-            $table->unsignedInteger('jumlah');       // jumlah barang yang dipinjam
-            $table->string('borrower_name');         // nama peminjam
-            $table->timestamps();                    // created_at untuk tanggal pinjam
+            $table->foreignId('stock_item_id')->constrained()->onDelete('cascade'); // relasi ke stock_items
+            $table->unsignedInteger('jumlah');
+            $table->string('borrower_name');
+            $table->text('alasan'); // deskripsi alasan peminjaman
+            $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
         Schema::dropIfExists('borrowings');

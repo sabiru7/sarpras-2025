@@ -4,14 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Borrowing;
 use App\Models\StockItem;
+use Illuminate\Http\Request;
 
 class BorrowingViewController extends Controller
 {
-   public function index()
+    /**
+     * Tampilkan halaman peminjaman barang
+     */
+    public function index()
     {
-        return view('barangs.peminjaman', [
-            'stockItems' => StockItem::all(),
-            'borrowings' => Borrowing::with('stockItem')->latest()->get(),
-        ]);
+        $borrowings = Borrowing::with('stockItem')->orderBy('created_at', 'desc')->get();
+        $stockItems = StockItem::all();
+
+        return view('barangs.peminjaman', compact('borrowings', 'stockItems'));
     }
 }
