@@ -14,4 +14,8 @@ class StockItem extends Model
     {
         return $this->photo ? asset('storage/' . $this->photo) : null;
     }
+     public function borrowings()
+    {
+        return $this->hasMany(Borrowing::class);
+    }
 }

@@ -36,4 +36,3 @@ use App\Http\Controllers\StockItemController;
 
 Route::apiResource('stock-items', StockItemController::class);
 Route::put('stock-items/{id}/photo', [StockItemController::class, 'updatePhoto']);
-    

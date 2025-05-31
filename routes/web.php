@@ -29,3 +29,8 @@ Route::get('/barang', function () {
 Route::get('/aproval', function () {
     return view('laporan.aproval'); // This should point to your next page, e.g., resources/views/next-page.blade.php
 });
+use App\Http\Controllers\BorrowingViewController;
+use App\Http\Controllers\BorrowingController;
+
+Route::get('/peminjaman', [BorrowingViewController::class, 'index'])->name('peminjaman.index');
+Route::post('/peminjaman', [BorrowingController::class, 'store'])->name('peminjaman.store');
