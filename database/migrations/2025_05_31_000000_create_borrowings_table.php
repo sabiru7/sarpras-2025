@@ -13,10 +13,13 @@ class CreateBorrowingsTable extends Migration
     {
         Schema::create('borrowings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('stock_item_id')->constrained()->onDelete('cascade'); // relasi ke stock_items
+            $table->foreignId('stock_item_id')->constrained()->onDelete('cascade'); // foreign key ke stock_items
             $table->unsignedInteger('jumlah');
             $table->string('borrower_name');
-            $table->text('alasan'); // deskripsi alasan peminjaman
+            $table->text('alasan');
+            $table->enum('status', ['dipinjam', 'kembali', 'terlambat'])->default('dipinjam');
+            $table->date('tanggal_pinjam')->nullable();
+            $table->date('tanggal_kembali')->nullable();
             $table->timestamps();
         });
     }

@@ -49,6 +49,16 @@
         <textarea id="alasan" name="alasan" class="form-control" rows="3" required></textarea>
       </div>
 
+      <div class="mb-4">
+        <label for="borrow_date" class="form-label">Tanggal Peminjaman</label>
+        <input type="date" id="borrow_date" name="borrow_date" class="form-control" required />
+      </div>
+
+      <div class="mb-4">
+        <label for="return_date" class="form-label">Tanggal Pengembalian (opsional)</label>
+        <input type="date" id="return_date" name="return_date" class="form-control" />
+      </div>
+
       <button type="submit" class="btn btn-primary w-full">Pinjam</button>
     </form>
 
@@ -65,7 +75,7 @@
             <th>Jumlah</th>
             <th>Peminjam</th>
             <th>Alasan</th>
-            <th>Tanggal</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -80,9 +90,23 @@
               </td>
               <td>{{ $borrowing->stockItem->name }}</td>
               <td>{{ $borrowing->jumlah }}</td>
-              <td>{{ $borrowing->peminjam }}</td>
+              <td>{{ $borrowing->borrower_name ?? $borrowing->peminjam }}</td>
               <td>{{ $borrowing->alasan }}</td>
-              <td>{{ $borrowing->created_at->format('d M Y H:i') }}</td>
+              <td class="text-center">
+                @switch($borrowing->status)
+                  @case('kembali')
+                    <span class="badge bg-success">Kembali</span>
+                    @break
+                  @case('dipinjam')
+                    <span class="badge bg-warning text-dark">Dipinjam</span>
+                    @break
+                  @case('terlambat')
+                    <span class="badge bg-danger">Terlambat</span>
+                    @break
+                  @default
+                    <span class="badge bg-secondary">-</span>
+                @endswitch
+              </td>
             </tr>
           @empty
             <tr>
@@ -93,6 +117,5 @@
       </table>
     </div>
   </div>
-
 </body>
 </html>

@@ -34,3 +34,7 @@ use App\Http\Controllers\BorrowingController;
 
 Route::get('/peminjaman', [BorrowingViewController::class, 'index'])->name('peminjaman.index');
 Route::post('/peminjaman', [BorrowingController::class, 'store'])->name('peminjaman.store');
+// routes/web.php
+use App\Http\Controllers\LaporanController;
+
+Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');

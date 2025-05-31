@@ -51,4 +51,5 @@ class BorrowingController extends Controller
         // Redirect kembali dengan pesan sukses
         return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil disimpan.');
     }
+    
 }
