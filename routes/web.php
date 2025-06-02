@@ -29,7 +29,12 @@ Route::get('/barang', function () {
 Route::get('/aproval', function () {
     return view('approval'); // This should point to your next page, e.g., resources/views/next-page.blade.php
 });
+Route::get('/pengembalian', function () {
+    return view('barangs.pengambilan'); // This should point to your next page, e.g., resources/views/next-page.blade.php
+});
 use App\Http\Controllers\BorrowingViewController;
+use App\Http\Controllers\PengembalianController;
+
 
 
 // routes/web.php
@@ -49,3 +54,5 @@ Route::post('/peminjaman', [BorrowingController::class, 'store'])->name('peminja
 Route::get('/approval', [ApprovalController::class, 'index'])->name('approval.index');
 Route::post('/approval/approve/{id}', [ApprovalController::class, 'approve'])->name('approval.approve');
 Route::post('/approval/reject/{id}', [ApprovalController::class, 'reject'])->name('approval.reject');
+Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian.index');
+Route::post('/pengembalian', [PengembalianController::class, 'store'])->name('pengembalian.store');
