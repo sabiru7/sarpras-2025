@@ -13,18 +13,22 @@
     }
     header {
       background-color: #0d9488;
-    }
-    header h1 {
       color: white;
-      font-weight: 700;
     }
     .table thead th {
       background-color: #14b8a6;
       color: white;
       text-align: center;
     }
-    .table tbody td {
-      vertical-align: middle;
+    .borrower-name {
+      max-width: 200px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .badge {
+      font-size: 0.8rem;
+      padding: 0.35em 0.6em;
     }
     footer {
       background-color: #065f46;
@@ -35,53 +39,54 @@
 <body class="min-vh-100 d-flex flex-column">
 
   <!-- Header -->
-  <header class="py-4 shadow">
+  <header class="py-4 shadow-sm">
     <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
-      <h1 class="mb-2 mb-md-0">Laporan Barang Peminjaman</h1>
-      <div class="text-white text-center md:text-right">
-        <div class="mb-1">Tanggal Laporan: {{ \Carbon\Carbon::now()->format('d-m-Y') }}</div>
+      <h1 class="mb-2 mb-md-0 fs-4 fw-bold">Laporan Barang Peminjaman</h1>
+      <div class="text-white text-md-end small">
+        Tanggal Laporan:<br>
+        <strong>{{ \Carbon\Carbon::parse($tanggalLaporan)->format('d-m-Y H:i') }}</strong>
       </div>
     </div>
   </header>
 
-  <!-- Main content -->
+  <!-- Main Content -->
   <main class="container my-5 flex-grow-1">
 
-    <!-- Summary cards -->
-    <section class="row g-3 mb-5 text-center">
-      <div class="col-md-4">
-        <div class="p-4 rounded-lg shadow bg-white">
-          <div class="text-teal-600 font-extrabold text-3xl">{{ $totalDipinjam ?? 0 }}</div>
-          <div class="text-gray-700 mt-2 font-semibold">Total Barang Dipinjam</div>
+    <!-- Summary Cards -->
+    <section class="row g-3 mb-4 text-center">
+      <div class="col-12 col-md-4">
+        <div class="p-4 bg-white rounded shadow-sm h-100 d-flex flex-column justify-content-center">
+          <h3 class="text-success fw-bold mb-1">{{ $totalDipinjam ?? 0 }}</h3>
+          <p class="text-muted mb-0">Total Barang Dipinjam</p>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="p-4 rounded-lg shadow bg-white">
-          <div class="text-teal-600 font-extrabold text-3xl">{{ $peminjamUnik ?? 0 }}</div>
-          <div class="text-gray-700 mt-2 font-semibold">Peminjam Aktif</div>
+      <div class="col-12 col-md-4">
+        <div class="p-4 bg-white rounded shadow-sm h-100 d-flex flex-column justify-content-center">
+          <h3 class="text-info fw-bold mb-1">{{ $peminjamUnik ?? 0 }}</h3>
+          <p class="text-muted mb-0">Peminjam Aktif</p>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="p-4 rounded-lg shadow bg-white">
-          <div class="text-teal-600 font-extrabold text-3xl">{{ $persenTepat ?? 0 }}%</div>
-          <div class="text-gray-700 mt-2 font-semibold">Barang Dikembalikan Tepat Waktu</div>
+      <div class="col-12 col-md-4">
+        <div class="p-4 bg-white rounded shadow-sm h-100 d-flex flex-column justify-content-center">
+          <h3 class="text-primary fw-bold mb-1">{{ $persenTepat ?? 0 }}%</h3>
+          <p class="text-muted mb-0">Pengembalian Tepat Waktu</p>
         </div>
       </div>
     </section>
 
-    <!-- Table of loaned items -->
+    <!-- Borrowing Table -->
     <section>
-      <h2 class="mb-4 text-teal-700 font-semibold text-xl">Detail Peminjaman Barang</h2>
-      <div class="table-responsive shadow rounded-lg bg-white">
-        <table class="table table-striped table-hover mb-0">
+      <h2 class="mb-3 text-teal-700 fw-semibold fs-5">Detail Peminjaman Barang</h2>
+      <div class="table-responsive bg-white rounded shadow-sm">
+        <table class="table table-bordered table-hover mb-0 align-middle">
           <thead>
             <tr>
-              <th style="width:5%;">No</th>
+              <th style="width: 5%;">No</th>
               <th>Nama Barang</th>
               <th>Nama Peminjam</th>
-              <th style="width:15%;">Tanggal Pinjam</th>
-              <th style="width:15%;">Tanggal Kembali</th>
-              <th style="width:12%;">Status</th>
+              <th style="width: 18%;">Tanggal Pinjam</th>
+              <th style="width: 18%;">Tanggal Kembali</th>
+              <th style="width: 12%;">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -89,47 +94,36 @@
               <tr>
                 <td class="text-center">{{ $i + 1 }}</td>
                 <td>{{ $item->stockItem->name ?? '-' }}</td>
-                <td>
-                  {{
-                    $item->peminjam 
-                    ?? $item->borrower_name 
-                    ?? ($item->user->name ?? '-')
-                  }}
+                <td class="borrower-name" title="{{ $item->peminjam ?? $item->borrower_name ?? $item->user->name ?? '-' }}">
+                  {{ $item->peminjam ?? $item->borrower_name ?? $item->user->name ?? '-' }}
                 </td>
-                <td class="text-center">
-                  {{ $item->tanggal_pinjam ? \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d-m-Y') : '-' }}
+              <td class="text-nowrap">
+              {{ $item->borrow_date ? \Carbon\Carbon::parse($item->borrow_date)->format('d-m-Y H:i') : '-' }}
                 </td>
+              <td class="text-nowrap">
+              {{ $item->return_date ? \Carbon\Carbon::parse($item->return_date)->format('d-m-Y H:i') : '-' }}
+              </td>
+
                 <td class="text-center">
-                  {{ $item->tanggal_kembali ? \Carbon\Carbon::parse($item->tanggal_kembali)->format('d-m-Y') : '-' }}
-                </td>
-                <td class="text-center">
-                  @switch($item->status)
-                    @case('kembali')
-                      <span class="badge bg-success">Kembali</span>
-                      @break
-                    @case('dipinjam')
-                      <span class="badge bg-warning text-dark">Dipinjam</span>
-                      @break
-                    @case('disetujui')
-                      <span class="badge bg-primary text-white">Disetujui</span>
-                      @break
-                    @case('terlambat')
-                      <span class="badge bg-danger">Terlambat</span>
-                      @break
-                    @case('menunggu')
-                      <span class="badge bg-info text-dark">Menunggu</span>
-                      @break
-                    @case('ditolak')
-                      <span class="badge bg-danger">Ditolak</span>
-                      @break
-                    @default
-                      <span class="badge bg-secondary">-</span>
-                  @endswitch
+                  @php
+                    $status = $item->status;
+                    $badgeClass = [
+                      'kembali'   => 'bg-success',
+                      'dipinjam'  => 'bg-warning text-dark',
+                      'disetujui' => 'bg-primary',
+                      'terlambat' => 'bg-danger',
+                      'menunggu'  => 'bg-info text-dark',
+                      'ditolak'   => 'bg-danger',
+                    ][$status] ?? 'bg-secondary';
+                  @endphp
+                  <span class="badge {{ $badgeClass }}">
+                    {{ ucfirst($status) }}
+                  </span>
                 </td>
               </tr>
             @empty
               <tr>
-                <td colspan="6" class="text-center">Tidak ada data peminjaman.</td>
+                <td colspan="6" class="text-center text-muted">Tidak ada data peminjaman.</td>
               </tr>
             @endforelse
           </tbody>
@@ -141,8 +135,8 @@
 
   <!-- Footer -->
   <footer class="py-3 mt-auto">
-    <div class="container text-center">
-      <p>© 2024 Sistem Peminjaman Barang. All rights reserved.</p>
+    <div class="container text-center small">
+      <p class="mb-0">© 2024 Sistem Peminjaman Barang. All rights reserved.</p>
     </div>
   </footer>
 

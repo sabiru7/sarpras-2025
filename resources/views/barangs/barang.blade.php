@@ -51,7 +51,7 @@
                 <option value="Kabel">Kabel</option>
                 <option value="Infocus">Infocus</option>
                 <option value="Peralatan">Peralatan</option>
-                <option value="Lainnya">Lainnya</option>
+                <option value="Lainnya">Alat Tulis</option>
               </select>
             </div>
             <div>

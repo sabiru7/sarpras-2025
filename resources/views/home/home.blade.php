@@ -9,15 +9,18 @@
 </head>
 <body class="bg-gray-100">
 
-    <div class="container mx-auto p-5">
-        <div class="absolute top-0 right-0 p-4">
-            <a href="welcome" class="btn btn-danger">Logout</a>
-        </div>
+    <!-- Navbar Top -->
+    <div class="bg-white shadow p-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-blue-600">Dashboard Admin Sarpas</h1>
+        <a href="welcome" class="btn btn-danger">Logout</a>
+    </div>
 
+    <!-- Content -->
+    <div class="container mx-auto p-5">
         <div class="flex flex-col items-center justify-center min-h-screen">
             <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
                 <h1 class="text-2xl font-bold text-center text-blue-600">Admin Sarpas</h1>
-                <p class="mt-4 text-center text-gray-700">kelola data-data sekolah</p>
+                <p class="mt-4 text-center text-gray-700">Kelola data-data sekolah</p>
                 
                 <div class="mt-6">
                     <a href="peminjaman" class="btn btn-primary w-full mb-2">Form Peminjaman</a>

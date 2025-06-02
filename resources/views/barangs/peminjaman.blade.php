@@ -22,8 +22,9 @@
     <h1 class="text-4xl font-bold text-indigo-700 mb-6 text-center">Form Peminjaman Barang</h1>
 
     {{-- Form Peminjaman --}}
-    <form action="{{ route('peminjaman.store') }}" method="POST">
+    <form action="{{ route('peminjaman.store') }}" method="POST" class="mb-5">
       @csrf
+
       <div class="mb-4">
         <label for="stock_item_id" class="form-label">Pilih Barang</label>
         <select id="stock_item_id" name="stock_item_id" class="form-select" required>
@@ -51,23 +52,24 @@
 
       <div class="mb-4">
         <label for="borrow_date" class="form-label">Tanggal Peminjaman</label>
-        <input type="date" id="borrow_date" name="borrow_date" class="form-control" required />
+        <input type="datetime-local" id="borrow_date" name="borrow_date" class="form-control" required />
       </div>
 
       <div class="mb-4">
         <label for="return_date" class="form-label">Tanggal Pengembalian (opsional)</label>
-        <input type="date" id="return_date" name="return_date" class="form-control" />
+        <input type="datetime-local" id="return_date" name="return_date" class="form-control" />
       </div>
 
-      <button type="submit" class="btn btn-primary w-full">Pinjam</button>
+      <button type="submit" class="btn btn-primary w-100">Pinjam</button>
     </form>
 
     <hr class="my-6" />
 
     {{-- Riwayat Peminjaman --}}
     <h2 class="text-3xl font-semibold mb-4">Riwayat Peminjaman</h2>
+
     <div class="table-responsive">
-      <table class="table table-bordered">
+      <table class="table table-bordered align-middle">
         <thead>
           <tr>
             <th>Foto</th>
@@ -75,13 +77,15 @@
             <th>Jumlah</th>
             <th>Peminjam</th>
             <th>Alasan</th>
+            <th>Tanggal Pinjam</th>
+            <th>Tanggal Kembali</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
           @forelse ($borrowings as $borrowing)
             <tr>
-              <td>
+              <td class="text-center" style="width: 90px;">
                 @if ($borrowing->stockItem->photo)
                   <img src="{{ $borrowing->stockItem->photo }}" alt="Foto" class="img-thumbnail" width="80" />
                 @else
@@ -92,6 +96,12 @@
               <td>{{ $borrowing->jumlah }}</td>
               <td>{{ $borrowing->borrower_name ?? $borrowing->peminjam }}</td>
               <td>{{ $borrowing->alasan }}</td>
+              <td class="text-nowrap">
+                {{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('d-m-Y H:i') }}
+              </td>
+              <td class="text-nowrap">
+                {{ $borrowing->return_date ? \Carbon\Carbon::parse($borrowing->return_date)->format('d-m-Y H:i') : '-' }}
+              </td>
               <td class="text-center">
                 @switch($borrowing->status)
                   @case('menunggu')
@@ -119,7 +129,7 @@
             </tr>
           @empty
             <tr>
-              <td colspan="6" class="text-center">Belum ada peminjaman.</td>
+              <td colspan="8" class="text-center">Belum ada peminjaman.</td>
             </tr>
           @endforelse
         </tbody>
