@@ -21,8 +21,9 @@
                 
                 <div class="mt-6">
                     <a href="peminjaman" class="btn btn-primary w-full mb-2">Form Peminjaman</a>
-                    <a href="laporan" class="btn btn-secondary w-full mb-2">Cek Status Peminjaman</a>
-                    <a href="aproval" class="btn btn-success w-full mb-2">Approval Peminjaman</a>
+                    <a href="laporan" class="btn btn-secondary w-full mb-2">Laporan Peminjaman</a>
+                    <a href="pengembalian" class="btn btn-success w-full mb-2">Pengembalian Barang</a>
+                    <a href="approval" class="btn btn-info w-full mb-2">Meminta Peminjaman</a>
                     <a href="barang" class="btn btn-info w-full mb-2">Kelola Barang-Barang</a>
                     <a href="users" class="btn btn-warning w-full">Kelola Akun Pengguna</a> 
                 </div>

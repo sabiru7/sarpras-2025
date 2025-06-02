@@ -45,25 +45,25 @@
   </header>
 
   <!-- Main content -->
-  <main class="container my-5 flex-grow">
+  <main class="container my-5 flex-grow-1">
 
     <!-- Summary cards -->
     <section class="row g-3 mb-5 text-center">
       <div class="col-md-4">
         <div class="p-4 rounded-lg shadow bg-white">
-          <div class="text-teal-600 font-extrabold text-3xl">{{ $totalDipinjam }}</div>
+          <div class="text-teal-600 font-extrabold text-3xl">{{ $totalDipinjam ?? 0 }}</div>
           <div class="text-gray-700 mt-2 font-semibold">Total Barang Dipinjam</div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="p-4 rounded-lg shadow bg-white">
-          <div class="text-teal-600 font-extrabold text-3xl">{{ $peminjamUnik }}</div>
+          <div class="text-teal-600 font-extrabold text-3xl">{{ $peminjamUnik ?? 0 }}</div>
           <div class="text-gray-700 mt-2 font-semibold">Peminjam Aktif</div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="p-4 rounded-lg shadow bg-white">
-          <div class="text-teal-600 font-extrabold text-3xl">{{ $persenTepat }}%</div>
+          <div class="text-teal-600 font-extrabold text-3xl">{{ $persenTepat ?? 0 }}%</div>
           <div class="text-gray-700 mt-2 font-semibold">Barang Dikembalikan Tepat Waktu</div>
         </div>
       </div>
@@ -76,16 +76,16 @@
         <table class="table table-striped table-hover mb-0">
           <thead>
             <tr>
-              <th>No</th>
+              <th style="width:5%;">No</th>
               <th>Nama Barang</th>
               <th>Nama Peminjam</th>
-              <th>Tanggal Pinjam</th>
-              <th>Tanggal Kembali</th>
-              <th>Status</th>
+              <th style="width:15%;">Tanggal Pinjam</th>
+              <th style="width:15%;">Tanggal Kembali</th>
+              <th style="width:12%;">Status</th>
             </tr>
           </thead>
           <tbody>
-            @foreach ($borrowings as $i => $item)
+            @forelse ($borrowings as $i => $item)
               <tr>
                 <td class="text-center">{{ $i + 1 }}</td>
                 <td>{{ $item->stockItem->name ?? '-' }}</td>
@@ -96,8 +96,12 @@
                     ?? ($item->user->name ?? '-')
                   }}
                 </td>
-                <td class="text-center">{{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d-m-Y') }}</td>
-                <td class="text-center">{{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d-m-Y') }}</td>
+                <td class="text-center">
+                  {{ $item->tanggal_pinjam ? \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d-m-Y') : '-' }}
+                </td>
+                <td class="text-center">
+                  {{ $item->tanggal_kembali ? \Carbon\Carbon::parse($item->tanggal_kembali)->format('d-m-Y') : '-' }}
+                </td>
                 <td class="text-center">
                   @switch($item->status)
                     @case('kembali')
@@ -106,15 +110,28 @@
                     @case('dipinjam')
                       <span class="badge bg-warning text-dark">Dipinjam</span>
                       @break
+                    @case('disetujui')
+                      <span class="badge bg-primary text-white">Disetujui</span>
+                      @break
                     @case('terlambat')
                       <span class="badge bg-danger">Terlambat</span>
+                      @break
+                    @case('menunggu')
+                      <span class="badge bg-info text-dark">Menunggu</span>
+                      @break
+                    @case('ditolak')
+                      <span class="badge bg-danger">Ditolak</span>
                       @break
                     @default
                       <span class="badge bg-secondary">-</span>
                   @endswitch
                 </td>
               </tr>
-            @endforeach
+            @empty
+              <tr>
+                <td colspan="6" class="text-center">Tidak ada data peminjaman.</td>
+              </tr>
+            @endforelse
           </tbody>
         </table>
       </div>

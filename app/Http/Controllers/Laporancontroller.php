@@ -20,7 +20,7 @@ class LaporanController extends Controller
             ? round(($kembaliTepatWaktu / $borrowings->count()) * 100, 2)
             : 0;
 
-        return view('barangs.laporan', compact(
+        return view('laporan.laporan', compact(
             'borrowings',
             'totalDipinjam',
             'peminjamUnik',

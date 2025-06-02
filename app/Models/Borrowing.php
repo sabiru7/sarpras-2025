@@ -10,10 +10,12 @@ class Borrowing extends Model
         'stock_item_id',
         'jumlah',
         'borrower_name',
-        'alasan',   // Tambahan kolom alasan
+        'alasan',
+        'borrow_date',
+        'return_date',
+        'status',
     ];
 
-    // Relasi ke StockItem
     public function stockItem()
     {
         return $this->belongsTo(StockItem::class);

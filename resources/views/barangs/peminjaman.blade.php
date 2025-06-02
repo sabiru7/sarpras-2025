@@ -94,14 +94,23 @@
               <td>{{ $borrowing->alasan }}</td>
               <td class="text-center">
                 @switch($borrowing->status)
-                  @case('kembali')
-                    <span class="badge bg-success">Kembali</span>
+                  @case('menunggu')
+                    <span class="badge bg-info text-dark">Menunggu</span>
+                    @break
+                  @case('disetujui')
+                    <span class="badge bg-primary text-white">Disetujui</span>
                     @break
                   @case('dipinjam')
                     <span class="badge bg-warning text-dark">Dipinjam</span>
                     @break
+                  @case('kembali')
+                    <span class="badge bg-success">Kembali</span>
+                    @break
                   @case('terlambat')
                     <span class="badge bg-danger">Terlambat</span>
+                    @break
+                  @case('ditolak')
+                    <span class="badge bg-danger">Ditolak</span>
                     @break
                   @default
                     <span class="badge bg-secondary">-</span>
@@ -117,5 +126,6 @@
       </table>
     </div>
   </div>
+
 </body>
 </html>

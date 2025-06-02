@@ -3,88 +3,163 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>User Table</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <title>User Management</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Tailwind for minor styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .form-container, .table-container {
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      background: #f9f9f9;
+    body {
+      background: linear-gradient(to right, #e0f7fa, #f1f5f9);
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .floating-form {
+      background: white;
+      padding: 30px;
+      border-radius: 1rem;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .table-hover tbody tr:hover {
+      background-color: #f0f8ff;
+    }
+    .btn-custom:hover {
+      transform: scale(1.05);
+      transition: 0.2s;
     }
   </style>
 </head>
 <body>
-  <div class="form-container">
-    <h2 class="text-center text-primary">Add / Edit User</h2>
+
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-primary fw-bold">User Management</h2>
+    <button class="btn btn-primary btn-custom" onclick="openForm()">+ Add User</button>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body p-4">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle text-center">
+          <thead class="table-primary">
+            <tr>
+              <th>ID</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="user-table-body">
+            <!-- Dynamic content -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Form -->
+<div class="overlay" id="form-overlay">
+  <div class="floating-form">
+    <h5 id="form-title" class="text-primary mb-3">Add User</h5>
     <form id="user-form">
-      <div>
+      <input type="hidden" id="user-id" />
+      <div class="mb-3">
         <label for="user-email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="user-email" placeholder="Enter email" required />
+        <input type="email" id="user-email" class="form-control" required />
       </div>
-      <div>
+      <div class="mb-3">
         <label for="user-password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="user-password" placeholder="Enter password" required />
+        <input type="password" id="user-password" class="form-control" required />
       </div>
-      <div>
+      <div class="mb-3">
         <label for="user-role" class="form-label">Role</label>
-        <select class="form-select" id="user-role" required>
+        <select id="user-role" class="form-select" required>
           <option value="" disabled selected>Select role</option>
           <option value="user">User</option>
           <option value="admin">Admin</option>
         </select>
       </div>
-      <input type="hidden" id="edit-user-id" />
-      <button type="submit" class="btn btn-primary w-100 mt-3">Save User</button>
+      <div class="d-flex justify-content-between">
+        <button type="submit" class="btn btn-primary btn-custom" id="submit-btn">Add User</button>
+        <button type="button" class="btn btn-outline-secondary" onclick="closeForm()">Cancel</button>
+      </div>
     </form>
   </div>
+</div>
 
-  <div class="table-container">
-    <h2 class="text-center text-primary">User Table</h2>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="user-table-body">
-        <!-- User data will be inserted dynamically here -->
-      </tbody>
-    </table>
-  </div>
+<!-- Script -->
 <script>
   let users = [];
-  let userIdCounter = 1; // Optional, kalau datanya statis, tapi nanti pakai dari DB
-
-  const apiBaseUrl = "http://localhost:8000/api/users"; // Ganti sesuai route API Laravel
+  const apiBaseUrl = "http://localhost:8000/api/users";
 
   const userForm = document.getElementById('user-form');
+  const formOverlay = document.getElementById('form-overlay');
+  const formTitle = document.getElementById('form-title');
+  const submitBtn = document.getElementById('submit-btn');
+
+  const userId = document.getElementById('user-id');
+  const userEmail = document.getElementById('user-email');
+  const userPassword = document.getElementById('user-password');
+  const userRole = document.getElementById('user-role');
   const userTableBody = document.getElementById('user-table-body');
 
   async function fetchUsers() {
-    const res = await fetch(apiBaseUrl);
-    users = await res.json();
-    renderTable();
+    try {
+      const res = await fetch(apiBaseUrl);
+      users = await res.json();
+      renderTable();
+    } catch (err) {
+      console.error("Error fetching users:", err);
+    }
   }
 
-  userForm.addEventListener('submit', async function (e) {
+  function renderTable() {
+    userTableBody.innerHTML = '';
+    users.forEach(user => {
+      userTableBody.innerHTML += `
+        <tr>
+          <td>${user.id}</td>
+          <td>${user.email}</td>
+          <td>${user.role}</td>
+          <td>
+            <button class="btn btn-sm btn-warning me-1" onclick="startEditUser(${user.id})">Edit</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})">Delete</button>
+          </td>
+        </tr>
+      `;
+    });
+  }
+
+  userForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    const email = document.getElementById('user-email').value;
-    const password = document.getElementById('user-password').value;
-    const role = document.getElementById('user-role').value;
-    const editUserId = document.getElementById('edit-user-id').value;
-
-    const payload = { email, password, role, name: 'Anonymous' };
+    const id = userId.value;
+    const payload = {
+      email: userEmail.value,
+      password: userPassword.value,
+      role: userRole.value,
+      name: "Anonymous"
+    };
 
     try {
-      if (editUserId) {
-        await fetch(`${apiBaseUrl}/${editUserId}`, {
+      if (id) {
+        await fetch(`${apiBaseUrl}/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
@@ -97,60 +172,51 @@
         });
       }
 
+      closeForm();
       await fetchUsers();
-      resetForm();
-    } catch (error) {
-      console.error('Error:', error);
+    } catch (err) {
+      console.error("Error saving user:", err);
     }
   });
 
-  function renderTable() {
-    userTableBody.innerHTML = '';
-    users.forEach(user => {
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${user.id}</td>
-        <td>${user.email}</td>
-        <td>${user.role}</td>
-        <td>
-          <button class="btn btn-sm btn-warning me-2" onclick="editUser(${user.id})">Edit</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})">Delete</button>
-        </td>
-      `;
-      userTableBody.appendChild(row);
-    });
+  function openForm() {
+    formTitle.textContent = "Add User";
+    submitBtn.textContent = "Add User";
+    userForm.reset();
+    userId.value = '';
+    formOverlay.style.display = 'flex';
   }
 
-  function editUser(id) {
+  function startEditUser(id) {
     const user = users.find(u => u.id === id);
-    if (user) {
-      document.getElementById('user-email').value = user.email;
-      document.getElementById('user-password').value = user.password || '';
-      document.getElementById('user-role').value = user.role;
-      document.getElementById('edit-user-id').value = user.id;
-    }
+    if (!user) return;
+
+    formTitle.textContent = "Edit User";
+    submitBtn.textContent = "Update User";
+    userId.value = user.id;
+    userEmail.value = user.email;
+    userPassword.value = '';
+    userRole.value = user.role;
+    formOverlay.style.display = 'flex';
+  }
+
+  function closeForm() {
+    userForm.reset();
+    formOverlay.style.display = 'none';
   }
 
   async function deleteUser(id) {
     if (!confirm('Are you sure you want to delete this user?')) return;
-
     try {
       await fetch(`${apiBaseUrl}/${id}`, { method: 'DELETE' });
       await fetchUsers();
-    } catch (error) {
-      console.error('Delete error:', error);
+    } catch (err) {
+      console.error("Error deleting user:", err);
     }
   }
 
-  function resetForm() {
-    userForm.reset();
-    document.getElementById('edit-user-id').value = '';
-  }
-
-  // Load users on page load
   fetchUsers();
 </script>
 
 </body>
 </html>
-    

@@ -8,48 +8,49 @@ use Illuminate\Http\Request;
 
 class BorrowingController extends Controller
 {
-    // Tampilkan form peminjaman beserta data barang dan peminjaman
     public function index()
     {
         $stockItems = StockItem::all();
         $borrowings = Borrowing::with('stockItem')->orderBy('created_at', 'desc')->get();
 
-        return view('peminjaman', compact('stockItems', 'borrowings'));
+        return view('barangs.peminjaman', compact('stockItems', 'borrowings'));
     }
 
-    // Simpan data peminjaman baru
-    public function store(Request $request)
-    {
-        // Validasi input form, termasuk alasan
-        $validated = $request->validate([
-            'stock_item_id' => 'required|exists:stock_items,id',
-            'jumlah' => 'required|integer|min:1',
-            'peminjam' => 'required|string|max:255',
-            'alasan' => 'required|string|max:1000',
-        ]);
+   public function store(Request $request)
+{
+    $validated = $request->validate([
+        'stock_item_id' => 'required|exists:stock_items,id',
+        'jumlah'         => 'required|integer|min:1',
+        'peminjam'       => 'required|string|max:255',
+        'alasan'         => 'required|string|max:1000',
+        'borrow_date'    => 'required|date',
+        'return_date'    => 'nullable|date|after_or_equal:borrow_date',
+    ]);
 
-        // Ambil stok barang yang dipilih
-        $stock = StockItem::findOrFail($validated['stock_item_id']);
+    // Ambil data stok barang
+    $stock = StockItem::findOrFail($validated['stock_item_id']);
 
-        // Cek ketersediaan stok
-        if ($stock->quantity < $validated['jumlah']) {
-            return back()->withErrors(['jumlah' => 'Stok tidak mencukupi'])->withInput();
-        }
-
-        // Kurangi stok barang
-        $stock->quantity -= $validated['jumlah'];
-        $stock->save();
-
-        // Simpan data peminjaman ke database dengan alasan
-        Borrowing::create([
-            'stock_item_id' => $validated['stock_item_id'],
-            'jumlah' => $validated['jumlah'],
-            'borrower_name' => $validated['peminjam'],
-            'alasan' => $validated['alasan'],
-        ]);
-
-        // Redirect kembali dengan pesan sukses
-        return redirect()->route('peminjaman.index')->with('success', 'Peminjaman berhasil disimpan.');
+    // Cek apakah stok mencukupi
+    if ($stock->quantity < $validated['jumlah']) {
+        return back()->withErrors(['jumlah' => 'Stok tidak mencukupi'])->withInput();
     }
-    
+
+    // Kurangi stok
+    $stock->quantity -= $validated['jumlah'];
+    $stock->save();
+
+    // Simpan data peminjaman
+    Borrowing::create([
+        'stock_item_id'  => $validated['stock_item_id'],
+        'jumlah'         => $validated['jumlah'],
+        'borrower_name'  => $validated['peminjam'],
+        'alasan'         => $validated['alasan'],
+        'borrow_date'    => $validated['borrow_date'],
+        'return_date'    => $validated['return_date'] ?? null,
+        'status'         => 'menunggu', // default status
+    ]);
+
+    return redirect()->route('approval.index')->with('success', 'Peminjaman berhasil disimpan dan menunggu persetujuan.');
+}
+
 }

@@ -76,4 +76,8 @@ class AuthController extends Controller
         $user->delete();
         return response()->json(null, 204);
     }
+    public function showLoginForm()
+{
+    return view('akun.welcome'); // buat file resources/views/auth/login.blade.php
+}
 }
