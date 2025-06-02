@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->text('alasan');
             $table->dateTime('borrow_date');  // Manual dari form
             $table->dateTime('return_date')->nullable();
-            $table->enum('status', ['menunggu', 'disetujui', 'ditolak', 'dipinjam', 'kembali'])->default('menunggu');
+            $table->enum('status', ['menunggu', 'disetujui', 'ditolak', 'dipinjam', 'dikembalikan'])->default('menunggu');
             $table->timestamps();
         });
     }

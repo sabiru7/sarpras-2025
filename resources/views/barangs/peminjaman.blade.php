@@ -86,15 +86,15 @@
           @forelse ($borrowings as $borrowing)
             <tr>
               <td class="text-center" style="width: 90px;">
-                @if ($borrowing->stockItem->photo)
-                  <img src="{{ $borrowing->stockItem->photo }}" alt="Foto" class="img-thumbnail" width="80" />
+                @if (!empty($borrowing->stockItem->photo))
+                  <img src="{{ asset($borrowing->stockItem->photo) }}" alt="Foto" class="img-thumbnail" width="80" />
                 @else
                   <span class="text-muted">Tidak ada</span>
                 @endif
               </td>
-              <td>{{ $borrowing->stockItem->name }}</td>
+              <td>{{ $borrowing->stockItem->name ?? '-' }}</td>
               <td>{{ $borrowing->jumlah }}</td>
-              <td>{{ $borrowing->borrower_name ?? $borrowing->peminjam }}</td>
+              <td>{{ $borrowing->borrower_name ?? $borrowing->peminjam ?? '-' }}</td>
               <td>{{ $borrowing->alasan }}</td>
               <td class="text-nowrap">
                 {{ \Carbon\Carbon::parse($borrowing->borrow_date)->format('d-m-Y H:i') }}
@@ -115,6 +115,9 @@
                     @break
                   @case('kembali')
                     <span class="badge bg-success">Kembali</span>
+                    @break
+                  @case('dikembalikan')
+                    <span class="badge bg-success">Dikembalikan</span>
                     @break
                   @case('terlambat')
                     <span class="badge bg-danger">Terlambat</span>

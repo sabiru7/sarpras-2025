@@ -13,6 +13,7 @@ class BorrowingController extends Controller
     {
         $stockItems = StockItem::all();
         $borrowings = Borrowing::with('stockItem')->latest()->get();
+        
         return view('barangs.peminjaman', compact('stockItems', 'borrowings'));
     }
 

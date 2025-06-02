@@ -9,15 +9,16 @@ class Borrowing extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'stock_item_id',
-        'jumlah',
-        'borrower_name',
-        'alasan',
-        'borrow_date',
-        'return_date',
-        'status',
-    ];
+  protected $fillable = [
+    'stock_item_id',
+    'jumlah',
+    'borrower_name',
+    'alasan',
+    'borrow_date',
+    'return_date',
+    'status',   
+];
+
 
     public function stockItem()
     {
